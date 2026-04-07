@@ -4,49 +4,60 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BankService {
-    private List<Account> database = new ArrayList<>(); //Hesapları sınırsız tutmak için ArrayList kullandık
+    private List<Account> database = new ArrayList<>(); 
 
-    public void createAccount(String accountNumber, String firstName, String lastName, double initialDeposit) {
-        Account newAccount = new Account(accountNumber, firstName, lastName, initialDeposit);
+    private int nextAccountNumber = 1000;
+
+    public void createAccount(String firstName, String lastName, String password, double initialDeposit) {
+        String newId = String.valueOf(nextAccountNumber++); 
         
+        Account newAccount = new Account(newId, firstName, lastName, password, initialDeposit);
         database.add(newAccount);
         
-        System.out.println("Hesap başarıyla açıldı -> " + newAccount.getFullName());
+        System.out.println("\nSistem: Hesap başarıyla açıldı!");
+        System.out.println("Lütfen UNUTMAYIN! Sistemin size atadığı Hesap Numarası: " + newId);
+        System.out.println("Aramıza hoş geldin, " + newAccount.getFullName() + "\n");
     }
 
     public Account findAccount(String accountId) {
         for (Account acc : database) {
-            if (acc.getAccountNumber().equals(accountId)) {//string karşılaştırması için equals kullanılır
+            if (acc.getAccountNumber().equals(accountId)) {
                 return acc;
             }
         }
         return null; 
     }
 
-    public void transfer(String fromId, String toId, double amount) {
-        Account sender = findAccount(fromId);
-        Account receiver = findAccount(toId);
-
-        if (sender != null && receiver != null) {
-            if (sender.withdraw(amount)) {
-                receiver.deposit(amount);
-                
-                sender.addTransaction("Transfer Gönderilen: " + receiver.getFullName() + " | Tutar: " + amount + " TL");
-                receiver.addTransaction("Transfer Gelen: " + sender.getFullName() + " | Tutar: " + amount + " TL");
-                
-                System.out.println("Transfer Başarılı: " + sender.getFullName() + " -> " + receiver.getFullName() + " (" + amount + " TL)");
-            } else {
-                System.out.println("Transfer Başarısız: Yetersiz bakiye!");
-            }
+    public Account login(String accountId, String password) {
+        Account acc = findAccount(accountId);
+        
+        if (acc == null) {
+            System.out.println("HATA: Sistemde böyle bir hesap bulunmamaktadır!");
+            return null;
+        }
+        
+        if (acc.checkPassword(password)) {
+            return acc;
         } else {
-            System.out.println("Transfer Başarısız: Hesap bulunamadı!");
+            System.out.println("HATA: Girdiğiniz şifre yanlış!");
+            return null;
         }
     }
 
-    public void printAccountHistory(String accountId) {
-        Account acc = findAccount(accountId);
-        if (acc != null) {
-            acc.printHistory();
+    public void transfer(Account sender, String toId, double amount) {
+        Account receiver = findAccount(toId);
+
+        if (receiver != null) {
+            if (sender.withdraw(amount)) {
+                receiver.deposit(amount);
+                sender.addTransaction("Transfer Gönderilen: " + receiver.getFullName() + " | Tutar: " + amount + " TL");
+                receiver.addTransaction("Transfer Gelen: " + sender.getFullName() + " | Tutar: " + amount + " TL");
+                System.out.println("Transfer Başarılı! (" + amount + " TL -> " + receiver.getFullName() + ")");
+            } else {
+                System.out.println("Sistem Hatası: Yetersiz bakiye!");
+            }
+        } else {
+            System.out.println("Sistem Hatası: Alıcı hesap bulunamadı!");
         }
     }
 }
