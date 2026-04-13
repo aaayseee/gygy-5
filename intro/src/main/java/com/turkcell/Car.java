@@ -54,6 +54,6 @@ public class Car extends Vehicle {// subclass, child class, derived class
             System.out.println("Fiyat negatif olamaz!");
             return; // metodu sonlandırmak için kullanılır, geri kalan kodların çalışmasını engeller
         }
-        this.price = price;*/
-    }
+        this.price = price;
+    }*/
 }
