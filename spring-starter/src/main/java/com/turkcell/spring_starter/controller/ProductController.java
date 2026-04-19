@@ -5,9 +5,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.turkcell.spring_starter.model.Product;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -21,7 +27,7 @@ public class ProductController {
     //kullanıcı ne zaman /api/product alanına istek atarsa -> cevap bu fonksiyonda dönen cevap olsun
     //api/product -> sayHi(), matchle
     //HTTP METHOD -> GET, POST, PUT, DELETE,PATCH...
-    @GetMapping("") //controllerın uzantısı + getin uzantısı -> /api/product
+    /*@GetMapping("") //controllerın uzantısı + getin uzantısı -> /api/product
     public String sayHi(String name, int age){ //localhost:8080/api/product?name=John&age=30
         return "Hi " + name + ", you are " + age + " years old.";
     }
@@ -36,5 +42,44 @@ public class ProductController {
     public Product add(@RequestBody Product product){ //JSON -> Java
         //veritabanına kaydetme işlemi yapılır
         return product; //kaydedilen ürün geri döner
+    }*/
+
+
+    //In-memory product list to store products
+    private List<Product> productList = new ArrayList<>(); //Ürünleri saklamak için bir liste
+
+    @GetMapping()
+    public List<Product> getAllProducts() {
+        return productList; // Tüm ürünleri döndür
     }
+
+    @GetMapping("{id}")
+    public Product getProductById(@PathVariable int id) {
+        return productList.stream()
+                .filter(product -> product.getId() == id)
+                .findFirst()
+                .orElse(null); // ID'ye göre ürünü bul, yoksa null döndür
+    }
+
+    @PostMapping
+    public void createProduct(@RequestBody Product product) {
+        productList.add(product); // Yeni ürünü listeye ekle
+    }
+
+    @PutMapping
+    public void updateProduct(@RequestBody Product product) {
+       ////..
+       Product productToUpdate = productList.stream().filter(p -> p.getId() == product.getId()).findFirst().orElseThrow();
+
+       productToUpdate.setName(product.getName());
+       productToUpdate.setPrice(product.getPrice());
+    }
+
+    @DeleteMapping("{id}")
+    public void deleteProduct(@PathVariable int id) {
+        ///..
+        productList.removeIf(product -> product.getId() == id); // ID'ye göre ürünü listeden kaldır
+    }
+
+
 }
