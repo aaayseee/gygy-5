@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
-
+//Altın kural: Veritabanı nesneleri request ve response nesneleri olarak kullanılmaz, ayrı sınıflar oluşturulur
 @RestController
 @RequestMapping("/api/product") //localhost:8080/api/product -> ProductController
 //Bu class bir RestController'dır, içini uygulama başadığında tara 
@@ -83,3 +83,7 @@ public class ProductController {
 
 
 }
+
+
+//DTO => Data Transfer Object
+//Entitiy ile X (Controller, Service, Repository) arasındaki veri transferini sağlamak için kullanılan sınıflar
