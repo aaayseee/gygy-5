@@ -2,12 +2,15 @@ package com.turkcell.spring_starter.controller;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.turkcell.spring_starter.dto.ProductCreatedResponse;
+import com.turkcell.spring_starter.dto.ProductForCreateDto;
 import com.turkcell.spring_starter.model.Product;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,14 +64,35 @@ public class ProductController {
                 .orElse(null); // ID'ye göre ürünü bul, yoksa null döndür
     }
 
+
+    //Request-Response pattern
+    //Her istek-cevap kendine has bir modele sahip olmak zorundadır
+    //Birebir başka bir istek-cevap çiftiyle aynı içeriğe sahip olsa dahi!!
     @PostMapping
-    public void createProduct(@RequestBody Product product) {
-        productList.add(product); // Yeni ürünü listeye ekle
+    public ProductCreatedResponse createProduct(@RequestBody ProductForCreateDto productDto) {
+        //Veritabanına product nesnesini ekle...
+
+        //Sen dışardan ProductForCreateDto alıyorsun
+        //Ama veritabanı Product ile çalışıyor
+
+        //Transfer => Manuel Mapping
+        Product product = new Product();
+        product.setName(productDto.getName());
+        product.setPrice(productDto.getPrice());
+        product.setId(new Random().nextInt(999));
+
+        productList.add(product); //veritabanına ekleme işlemi
+
+        //Domain Nesnesi -> Dto
+        ProductCreatedResponse response = new ProductCreatedResponse();
+        response.setId(product.getId());    
+        response.setName(product.getName());
+        response.setPrice(product.getPrice());
+        return response;
     }
 
     @PutMapping
     public void updateProduct(@RequestBody Product product) {
-       ////..
        Product productToUpdate = productList.stream().filter(p -> p.getId() == product.getId()).findFirst().orElseThrow();
 
        productToUpdate.setName(product.getName());
