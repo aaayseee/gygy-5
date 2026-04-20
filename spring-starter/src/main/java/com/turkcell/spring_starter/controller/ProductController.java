@@ -75,6 +75,12 @@ public class ProductController {
         //Sen dışardan ProductForCreateDto alıyorsun
         //Ama veritabanı Product ile çalışıyor
 
+        //Validasyon mapping işlemleri iş kodudur ve controllerda yapılmaz, service katmanında yapılır
+        //Validasyon
+        if(productDto.getPrice() < 0){
+            throw new RuntimeException("Para 0'dan küçük olamaz");
+        }
+
         //Transfer => Manuel Mapping
         Product product = new Product();
         product.setName(productDto.getName());
@@ -89,6 +95,10 @@ public class ProductController {
         response.setName(product.getName());
         response.setPrice(product.getPrice());
         return response;
+
+        //İş kodu çalıştıramaz ama bunu yapması gerekir
+        //Bu yüzden iş kodunu çalıştıracak olan yapıya bağımlıdır
+        //Bağımlılık Enjeksiyonu -> Dependecy Injection
     }
 
     @PutMapping
