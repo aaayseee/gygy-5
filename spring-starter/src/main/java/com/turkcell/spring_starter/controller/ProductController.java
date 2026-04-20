@@ -4,24 +4,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.turkcell.spring_starter.dto.ProductCreatedResponse;
 import com.turkcell.spring_starter.dto.ProductForCreateDto;
-import com.turkcell.spring_starter.model.Product;
+import com.turkcell.spring_starter.service.ProductServiceImlp;
+
+import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
 //Altın kural: Veritabanı nesneleri request ve response nesneleri olarak kullanılmaz, ayrı sınıflar oluşturulur
-@RestController
+@RestController // uygulama gerektiğinde controllerı newle
 @RequestMapping("/api/product") //localhost:8080/api/product -> ProductController
 //Bu class bir RestController'dır, içini uygulama başadığında tara 
 //http function tanımlarını al
@@ -48,6 +42,8 @@ public class ProductController {
     }*/
 
 
+
+    /*
     //In-memory product list to store products
     private List<Product> productList = new ArrayList<>(); //Ürünleri saklamak için bir liste
 
@@ -113,8 +109,20 @@ public class ProductController {
     public void deleteProduct(@PathVariable int id) {
         ///..
         productList.removeIf(product -> product.getId() == id); // ID'ye göre ürünü listeden kaldır
+    }*/
+
+
+    //private final ProductServiceImpl productServiceImpl = new ProductServiceImpl();
+    private final ProductServiceImlp productServiceImpl;
+
+    public ProductController(ProductServiceImlp productServiceImpl) {
+        this.productServiceImpl = productServiceImpl;
     }
 
+    @PostMapping
+    public ProductCreatedResponse create(@RequestBody @Valid ProductForCreateDto productDto) {
+        return this.productServiceImpl.create(productDto);
+    }
 
 }
 
