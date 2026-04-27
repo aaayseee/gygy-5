@@ -5,13 +5,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.turkcell.spring_starter.dto.CreateCategoryRequest;
 import com.turkcell.spring_starter.dto.CreatedCategoryResponse;
+import com.turkcell.spring_starter.dto.GetByIdCategoryResponse;
 import com.turkcell.spring_starter.dto.ListCategoryResponse;
+import com.turkcell.spring_starter.dto.UpdateCategoryRequest;
+import com.turkcell.spring_starter.dto.UpdatedCategoryResponse;
 import com.turkcell.spring_starter.service.CategoryServiceImpl;
 
 import java.util.List;
+import java.util.UUID;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -34,5 +41,20 @@ public class CategoriesController {
     @GetMapping
     public List<ListCategoryResponse> getAll() {
         return categoryServiceImpl.getAll();
+    }
+
+    @GetMapping("/{id}")
+    public GetByIdCategoryResponse getById(@PathVariable UUID id) {
+        return categoryServiceImpl.getById(id);
+    }
+
+    @PutMapping("/{id}")
+    public UpdatedCategoryResponse update(@PathVariable UUID id, @RequestBody UpdateCategoryRequest request) {
+        return categoryServiceImpl.update(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable UUID id) {
+        categoryServiceImpl.delete(id);
     }
 }

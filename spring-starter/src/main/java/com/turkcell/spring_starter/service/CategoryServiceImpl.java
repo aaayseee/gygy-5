@@ -1,12 +1,16 @@
 package com.turkcell.spring_starter.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
 import com.turkcell.spring_starter.dto.CreateCategoryRequest;
 import com.turkcell.spring_starter.dto.CreatedCategoryResponse;
+import com.turkcell.spring_starter.dto.GetByIdCategoryResponse;
 import com.turkcell.spring_starter.dto.ListCategoryResponse;
+import com.turkcell.spring_starter.dto.UpdateCategoryRequest;
+import com.turkcell.spring_starter.dto.UpdatedCategoryResponse;
 import com.turkcell.spring_starter.entity.Category;
 import com.turkcell.spring_starter.repository.CategoryRepository;
 
@@ -44,5 +48,30 @@ public class CategoryServiceImpl {
             return response;
             })
             .toList();
+    }
+
+
+    public GetByIdCategoryResponse getById(UUID id) {
+        Category category = categoryRepository.findById(id).orElseThrow();
+
+        GetByIdCategoryResponse response = new GetByIdCategoryResponse();
+        response.setId(category.getId());
+        response.setName(category.getName());
+        return response;
+    }
+
+    public UpdatedCategoryResponse update(UUID id, UpdateCategoryRequest request) {
+        Category category = categoryRepository.findById(id).orElseThrow();
+        category.setName(request.getName());
+        category = categoryRepository.save(category);
+
+        UpdatedCategoryResponse response = new UpdatedCategoryResponse();
+        response.setId(category.getId());
+        response.setName(category.getName());
+        return response;
+    }
+
+    public void delete(UUID id) {
+        categoryRepository.deleteById(id);
     }
 }
