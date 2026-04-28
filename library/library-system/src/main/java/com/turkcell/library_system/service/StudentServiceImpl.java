@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.library_system.dto.*;
-import com.turkcell.library_system.entity.Author;
 import com.turkcell.library_system.entity.Department;
 import com.turkcell.library_system.entity.Student;
 import com.turkcell.library_system.exception.NotFoundException;
