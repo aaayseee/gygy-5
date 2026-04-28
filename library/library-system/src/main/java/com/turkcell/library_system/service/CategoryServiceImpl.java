@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.entity.Category;
+import com.turkcell.library_system.exception.NotFoundException;
 import com.turkcell.library_system.repository.CategoryRepository;
 
 @Service
@@ -44,7 +45,8 @@ public class CategoryServiceImpl {
     }
 
     public GetByIdCategoryResponse getById(UUID id) {
-        Category category = categoryRepository.findById(id).orElseThrow();
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Kategori bulunamadı. ID: " + id));
 
         GetByIdCategoryResponse response = new GetByIdCategoryResponse();
         response.setId(category.getId());
@@ -54,7 +56,8 @@ public class CategoryServiceImpl {
     }
 
     public UpdatedCategoryResponse update(UUID id, UpdateCategoryRequest request) {
-        Category category = categoryRepository.findById(id).orElseThrow();
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Kategori bulunamadı. ID: " + id));
         category.setCategoryName(request.getCategoryName());
         category.setDescription(request.getDescription());
         category = categoryRepository.save(category);
@@ -67,6 +70,9 @@ public class CategoryServiceImpl {
     }
 
     public void delete(UUID id) {
+        if (!categoryRepository.existsById(id))
+            throw new NotFoundException("Kategori bulunamadı. ID: " + id);
+
         categoryRepository.deleteById(id);
     }
 }

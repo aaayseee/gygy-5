@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.service.BorrowServiceImpl;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/borrows")
 public class BorrowsController {
@@ -18,7 +20,7 @@ public class BorrowsController {
     }
 
     @PostMapping
-    public CreatedBorrowResponse create(@RequestBody CreateBorrowRequest request) {
+    public CreatedBorrowResponse create(@RequestBody  @Valid CreateBorrowRequest request) {
         return borrowServiceImpl.create(request);
     }
 

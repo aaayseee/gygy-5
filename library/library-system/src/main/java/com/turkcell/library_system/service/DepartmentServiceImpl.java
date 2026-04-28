@@ -6,7 +6,9 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.library_system.dto.*;
+import com.turkcell.library_system.entity.Author;
 import com.turkcell.library_system.entity.Department;
+import com.turkcell.library_system.exception.NotFoundException;
 import com.turkcell.library_system.repository.DepartmentRepository;
 
 @Service
@@ -44,7 +46,8 @@ public class DepartmentServiceImpl {
     }
 
     public GetByIdDepartmentResponse getById(UUID id) {
-        Department department = departmentRepository.findById(id).orElseThrow();
+        Department department = departmentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Departman bulunamadı. ID: " + id));
 
         GetByIdDepartmentResponse response = new GetByIdDepartmentResponse();
         response.setId(department.getId());
@@ -54,7 +57,8 @@ public class DepartmentServiceImpl {
     }
 
     public UpdatedDepartmentResponse update(UUID id, UpdateDepartmentRequest request) {
-        Department department = departmentRepository.findById(id).orElseThrow();
+        Department department = departmentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Departman bulunamadı. ID: " + id));
         department.setDeptName(request.getDeptName());
         department.setFaculty(request.getFaculty());
         department = departmentRepository.save(department);
@@ -67,6 +71,8 @@ public class DepartmentServiceImpl {
     }
 
     public void delete(UUID id) {
+        if (!departmentRepository.existsById(id))
+            throw new NotFoundException("Departman bulunamadı. ID: " + id);
         departmentRepository.deleteById(id);
     }
 }

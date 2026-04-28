@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.entity.*;
+import com.turkcell.library_system.exception.NotFoundException;
 import com.turkcell.library_system.repository.*;
 
 @Service
@@ -58,7 +59,8 @@ public class ReservationServiceImpl {
     }
 
     public GetByIdReservationResponse getById(UUID id) {
-        Reservation reservation = reservationRepository.findById(id).orElseThrow();
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Rezervasyon bulunamadı. ID: " + id));
 
         GetByIdReservationResponse response = new GetByIdReservationResponse();
         response.setId(reservation.getId());
@@ -70,9 +72,12 @@ public class ReservationServiceImpl {
     }
 
     public UpdatedReservationResponse update(UUID id, UpdateReservationRequest request) {
-        Reservation reservation = reservationRepository.findById(id).orElseThrow();
-        Student student = studentRepository.findById(request.getStudentId()).orElseThrow();
-        Book book = bookRepository.findById(request.getBookId()).orElseThrow();
+        Reservation reservation = reservationRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Rezervasyon bulunamadı. ID: " + id));
+        Student student = studentRepository.findById(request.getStudentId())
+                .orElseThrow(() -> new NotFoundException("Öğrenci bulunamadı. ID: " + request.getStudentId()));
+        Book book = bookRepository.findById(request.getBookId())
+                .orElseThrow(() -> new NotFoundException("Kitap bulunamadı. ID: " + request.getBookId()));
 
         reservation.setStudent(student);
         reservation.setBook(book);
@@ -90,6 +95,8 @@ public class ReservationServiceImpl {
     }
 
     public void delete(UUID id) {
+        if (!reservationRepository.existsById(id))
+            throw new NotFoundException("Rezervasyon bulunamadı. ID: " + id);
         reservationRepository.deleteById(id);
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.service.CategoryServiceImpl;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/categories")
 public class CategoriesController {
@@ -18,7 +20,7 @@ public class CategoriesController {
     }
 
     @PostMapping
-    public CreatedCategoryResponse create(@RequestBody CreateCategoryRequest request) {
+    public CreatedCategoryResponse create(@RequestBody @Valid CreateCategoryRequest request) {
         return categoryServiceImpl.create(request);
     }
 
@@ -33,7 +35,7 @@ public class CategoriesController {
     }
 
     @PutMapping("/{id}")
-    public UpdatedCategoryResponse update(@PathVariable UUID id, @RequestBody UpdateCategoryRequest request) {
+    public UpdatedCategoryResponse update(@PathVariable UUID id, @RequestBody @Valid UpdateCategoryRequest request) {
         return categoryServiceImpl.update(id, request);
     }
 

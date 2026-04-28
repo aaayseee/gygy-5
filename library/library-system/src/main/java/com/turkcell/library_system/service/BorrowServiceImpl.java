@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.entity.*;
+import com.turkcell.library_system.exception.NotFoundException;
 import com.turkcell.library_system.repository.*;
 
 @Service
@@ -70,7 +71,8 @@ public class BorrowServiceImpl {
     }
 
     public GetByIdBorrowResponse getById(UUID id) {
-        Borrow borrow = borrowRepository.findById(id).orElseThrow();
+        Borrow borrow = borrowRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Ödünç bulunamadı. ID: " + id));
 
         GetByIdBorrowResponse response = new GetByIdBorrowResponse();
         response.setId(borrow.getId());
@@ -85,7 +87,8 @@ public class BorrowServiceImpl {
     }
 
     public UpdatedBorrowResponse update(UUID id, UpdateBorrowRequest request) {
-        Borrow borrow = borrowRepository.findById(id).orElseThrow();
+        Borrow borrow = borrowRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Ödünç bulunamadı. ID: " + id));
         Student student = studentRepository.findById(request.getStudentId()).orElseThrow();
         Book book = bookRepository.findById(request.getBookId()).orElseThrow();
         Staff staff = staffRepository.findById(request.getStaffId()).orElseThrow();
@@ -112,6 +115,9 @@ public class BorrowServiceImpl {
     }
 
     public void delete(UUID id) {
+        if (!borrowRepository.existsById(id))
+            throw new NotFoundException("Ödünç bulunamadı. ID: " + id);
+
         borrowRepository.deleteById(id);
     }
 }

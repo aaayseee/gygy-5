@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.service.BookServiceImpl;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/books")
 public class BooksController {
@@ -18,7 +20,7 @@ public class BooksController {
     }
 
     @PostMapping
-    public CreatedBookResponse create(@RequestBody CreateBookRequest request) {
+    public CreatedBookResponse create(@RequestBody @Valid CreateBookRequest request) {
         return bookServiceImpl.create(request);
     }
 
@@ -33,7 +35,7 @@ public class BooksController {
     }
 
     @PutMapping("/{id}")
-    public UpdatedBookResponse update(@PathVariable UUID id, @RequestBody UpdateBookRequest request) {
+    public UpdatedBookResponse update(@PathVariable UUID id, @RequestBody @Valid UpdateBookRequest request) {
         return bookServiceImpl.update(id, request);
     }
 

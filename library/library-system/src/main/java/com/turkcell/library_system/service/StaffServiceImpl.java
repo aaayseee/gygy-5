@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.entity.Staff;
+import com.turkcell.library_system.exception.NotFoundException;
 import com.turkcell.library_system.repository.StaffRepository;
 
 @Service
@@ -56,7 +57,8 @@ public class StaffServiceImpl {
     }
 
     public GetByIdStaffResponse getById(UUID id) {
-        Staff staff = staffRepository.findById(id).orElseThrow();
+        Staff staff = staffRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Personel bulunamadı. ID: " + id));
 
         GetByIdStaffResponse response = new GetByIdStaffResponse();
         response.setId(staff.getId());
@@ -70,7 +72,8 @@ public class StaffServiceImpl {
     }
 
     public UpdatedStaffResponse update(UUID id, UpdateStaffRequest request) {
-        Staff staff = staffRepository.findById(id).orElseThrow();
+        Staff staff = staffRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Personel bulunamadı. ID: " + id));
         staff.setBadgeNo(request.getBadgeNo());
         staff.setFirstName(request.getFirstName());
         staff.setLastName(request.getLastName());
@@ -91,6 +94,8 @@ public class StaffServiceImpl {
     }
 
     public void delete(UUID id) {
+        if (!staffRepository.existsById(id))
+            throw new NotFoundException("Personel bulunamadı. ID: " + id);
         staffRepository.deleteById(id);
     }
 }

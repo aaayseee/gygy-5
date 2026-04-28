@@ -3,13 +3,30 @@ package com.turkcell.library_system.dto;
 import java.time.LocalDate;
 import java.util.UUID;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public class CreateBorrowRequest {
+    @NotNull(message = "Öğrenci ID boş olamaz.")
     private UUID studentId;
+
+    @NotNull(message = "Kitap ID boş olamaz.")
     private UUID bookId;
+
+    @NotNull(message = "Personel ID boş olamaz.")
     private UUID staffId;
+
+    @NotNull(message = "Ödünç tarihi boş olamaz.")
     private LocalDate borrowDate;
+
+    @NotNull(message = "Son iade tarihi boş olamaz.")
     private LocalDate dueDate;
+
+    @Min(value = 0, message = "Uzatma sayısı 0'dan küçük olamaz.")
     private Integer extensionCount;
+
+    @Size(max = 30, message = "Durum en fazla 30 karakter olabilir.")
     private String status;
 
     public UUID getStudentId() { return studentId; }

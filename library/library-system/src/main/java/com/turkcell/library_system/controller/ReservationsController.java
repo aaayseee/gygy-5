@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.service.ReservationServiceImpl;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/reservations")
 public class ReservationsController {
@@ -18,7 +20,7 @@ public class ReservationsController {
     }
 
     @PostMapping
-    public CreatedReservationResponse create(@RequestBody CreateReservationRequest request) {
+    public CreatedReservationResponse create(@RequestBody @Valid CreateReservationRequest request) {
         return reservationServiceImpl.create(request);
     }
 
@@ -33,7 +35,7 @@ public class ReservationsController {
     }
 
     @PutMapping("/{id}")
-    public UpdatedReservationResponse update(@PathVariable UUID id, @RequestBody UpdateReservationRequest request) {
+    public UpdatedReservationResponse update(@PathVariable UUID id, @RequestBody @Valid UpdateReservationRequest request) {
         return reservationServiceImpl.update(id, request);
     }
 

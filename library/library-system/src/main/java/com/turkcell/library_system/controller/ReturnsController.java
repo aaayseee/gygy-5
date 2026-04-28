@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.service.ReturnServiceImpl;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/returns")
 public class ReturnsController {
@@ -18,7 +20,7 @@ public class ReturnsController {
     }
 
     @PostMapping
-    public CreatedReturnResponse create(@RequestBody CreateReturnRequest request) {
+    public CreatedReturnResponse create(@RequestBody @Valid CreateReturnRequest request) {
         return returnServiceImpl.create(request);
     }
 
@@ -33,7 +35,7 @@ public class ReturnsController {
     }
 
     @PutMapping("/{id}")
-    public UpdatedReturnResponse update(@PathVariable UUID id, @RequestBody UpdateReturnRequest request) {
+    public UpdatedReturnResponse update(@PathVariable UUID id, @RequestBody @Valid UpdateReturnRequest request) {
         return returnServiceImpl.update(id, request);
     }
 

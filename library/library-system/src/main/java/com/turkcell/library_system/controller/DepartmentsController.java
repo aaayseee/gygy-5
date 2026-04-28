@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.service.DepartmentServiceImpl;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/departments")
 public class DepartmentsController {
@@ -18,7 +20,7 @@ public class DepartmentsController {
     }
 
     @PostMapping
-    public CreatedDepartmentResponse create(@RequestBody CreateDepartmentRequest request) {
+    public CreatedDepartmentResponse create(@RequestBody @Valid CreateDepartmentRequest request) {
         return departmentServiceImpl.create(request);
     }
 

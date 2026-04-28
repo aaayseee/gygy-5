@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.service.AuthorServiceImpl;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/authors")
 public class AuthorsController {
@@ -18,7 +20,7 @@ public class AuthorsController {
     }
 
     @PostMapping
-    public CreatedAuthorResponse create(@RequestBody CreateAuthorRequest request) {
+    public CreatedAuthorResponse create(@RequestBody @Valid CreateAuthorRequest request) {
         return authorServiceImpl.create(request);
     }
 
@@ -33,7 +35,7 @@ public class AuthorsController {
     }
 
     @PutMapping("/{id}")
-    public UpdatedAuthorResponse update(@PathVariable UUID id, @RequestBody UpdateAuthorRequest request) {
+    public UpdatedAuthorResponse update(@PathVariable UUID id, @RequestBody @Valid UpdateAuthorRequest request) {
         return authorServiceImpl.update(id, request);
     }
 

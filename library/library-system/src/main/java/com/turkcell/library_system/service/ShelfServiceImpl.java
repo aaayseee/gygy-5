@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.entity.Shelf;
+import com.turkcell.library_system.exception.NotFoundException;
 import com.turkcell.library_system.repository.ShelfRepository;
 
 @Service
@@ -47,7 +48,8 @@ public class ShelfServiceImpl {
     }
 
     public GetByIdShelfResponse getById(UUID id) {
-        Shelf shelf = shelfRepository.findById(id).orElseThrow();
+        Shelf shelf = shelfRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Raf bulunamadı. ID: " + id));
 
         GetByIdShelfResponse response = new GetByIdShelfResponse();
         response.setId(shelf.getId());
@@ -58,7 +60,8 @@ public class ShelfServiceImpl {
     }
 
     public UpdatedShelfResponse update(UUID id, UpdateShelfRequest request) {
-        Shelf shelf = shelfRepository.findById(id).orElseThrow();
+        Shelf shelf = shelfRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Raf bulunamadı. ID: " + id));
         shelf.setShelfCode(request.getShelfCode());
         shelf.setFloor(request.getFloor());
         shelf.setSection(request.getSection());
@@ -73,6 +76,8 @@ public class ShelfServiceImpl {
     }
 
     public void delete(UUID id) {
+        if (!shelfRepository.existsById(id))
+            throw new NotFoundException("Raf bulunamadı. ID: " + id);
         shelfRepository.deleteById(id);
     }
 }

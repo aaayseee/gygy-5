@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.service.StudentServiceImpl;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/students")
 public class StudentsController {
@@ -18,7 +20,7 @@ public class StudentsController {
     }
 
     @PostMapping
-    public CreatedStudentResponse create(@RequestBody CreateStudentRequest request) {
+    public CreatedStudentResponse create(@RequestBody @Valid CreateStudentRequest request) {
         return studentServiceImpl.create(request);
     }
 
@@ -33,7 +35,7 @@ public class StudentsController {
     }
 
     @PutMapping("/{id}")
-    public UpdatedStudentResponse update(@PathVariable UUID id, @RequestBody UpdateStudentRequest request) {
+    public UpdatedStudentResponse update(@PathVariable UUID id, @RequestBody @Valid UpdateStudentRequest request) {
         return studentServiceImpl.update(id, request);
     }
 

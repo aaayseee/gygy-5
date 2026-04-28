@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.entity.*;
+import com.turkcell.library_system.exception.NotFoundException;
 import com.turkcell.library_system.repository.*;
 
 @Service
@@ -82,7 +83,8 @@ public class BookServiceImpl {
     }
 
     public GetByIdBookResponse getById(UUID id) {
-        Book book = bookRepository.findById(id).orElseThrow();
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Kitap bulunamadı. ID: " + id));
 
         GetByIdBookResponse response = new GetByIdBookResponse();
         response.setId(book.getId());
@@ -101,8 +103,8 @@ public class BookServiceImpl {
     }
 
     public UpdatedBookResponse update(UUID id, UpdateBookRequest request) {
-        Book book = bookRepository.findById(id).orElseThrow();
-        Author author = authorRepository.findById(request.getAuthorId()).orElseThrow();
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Kitap bulunamadı. ID: " + id));        Author author = authorRepository.findById(request.getAuthorId()).orElseThrow();
         Category category = categoryRepository.findById(request.getCategoryId()).orElseThrow();
         Shelf shelf = shelfRepository.findById(request.getShelfId()).orElseThrow();
 
@@ -136,6 +138,8 @@ public class BookServiceImpl {
     }
 
     public void delete(UUID id) {
+        if (!bookRepository.existsById(id))
+            throw new NotFoundException("Kitap bulunamadı. ID: " + id);
         bookRepository.deleteById(id);
     }
 }

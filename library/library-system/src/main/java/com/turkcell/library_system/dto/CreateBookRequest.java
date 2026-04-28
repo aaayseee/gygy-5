@@ -2,17 +2,44 @@ package com.turkcell.library_system.dto;
 
 import java.util.UUID;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 public class CreateBookRequest {
+    @NotNull(message = "Yazar ID boş olamaz.")
     private UUID authorId;
+
+    @NotNull(message = "Kategori ID boş olamaz.")
     private UUID categoryId;
+
+    @NotNull(message = "Raf ID boş olamaz.")
     private UUID shelfId;
+
+    @NotBlank(message = "ISBN boş olamaz.")
+    @Size(max = 20, message = "ISBN en fazla 20 karakter olabilir.")
     private String isbn;
+
+    @NotBlank(message = "Kitap adı boş olamaz.")
+    @Size(max = 255, message = "Kitap adı en fazla 255 karakter olabilir.")
     private String title;
+
     private Integer publishYear;
+
+    @Size(max = 100, message = "Yayınevi en fazla 100 karakter olabilir.")
     private String publisher;
+
+    @Size(max = 30, message = "Dil en fazla 30 karakter olabilir.")
     private String language;
+
+    @Min(value = 1, message = "Sayfa sayısı en az 1 olmalıdır.")
     private Integer pageCount;
+
+    @Min(value = 1, message = "Toplam kopya sayısı en az 1 olmalıdır.")
     private Integer totalCopies;
+
+    @Min(value = 0, message = "Mevcut kopya sayısı 0'dan küçük olamaz.")
     private Integer availableCopies;
 
     public UUID getAuthorId() { return authorId; }
@@ -37,5 +64,4 @@ public class CreateBookRequest {
     public void setTotalCopies(Integer totalCopies) { this.totalCopies = totalCopies; }
     public Integer getAvailableCopies() { return availableCopies; }
     public void setAvailableCopies(Integer availableCopies) { this.availableCopies = availableCopies; }
-
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.entity.*;
+import com.turkcell.library_system.exception.NotFoundException;
 import com.turkcell.library_system.repository.*;
 
 @Service
@@ -61,7 +62,8 @@ public class ReturnServiceImpl {
     }
 
     public GetByIdReturnResponse getById(UUID id) {
-        Return returnEntity = returnRepository.findById(id).orElseThrow();
+        Return returnEntity = returnRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("İade bulunamadı. ID: " + id));
 
         GetByIdReturnResponse response = new GetByIdReturnResponse();
         response.setId(returnEntity.getId());
@@ -74,9 +76,12 @@ public class ReturnServiceImpl {
     }
 
     public UpdatedReturnResponse update(UUID id, UpdateReturnRequest request) {
-        Return returnEntity = returnRepository.findById(id).orElseThrow();
-        Borrow borrow = borrowRepository.findById(request.getBorrowId()).orElseThrow();
-        Staff staff = staffRepository.findById(request.getStaffId()).orElseThrow();
+        Return returnEntity = returnRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("İade bulunamadı. ID: " + id));
+        Borrow borrow = borrowRepository.findById(request.getBorrowId())
+                .orElseThrow(() -> new NotFoundException("Ödünç bulunamadı. ID: " + request.getBorrowId()));
+        Staff staff = staffRepository.findById(request.getStaffId())
+                .orElseThrow(() -> new NotFoundException("Personel bulunamadı. ID: " + request.getStaffId()));
 
         returnEntity.setBorrow(borrow);
         returnEntity.setStaff(staff);
@@ -96,6 +101,8 @@ public class ReturnServiceImpl {
     }
 
     public void delete(UUID id) {
+        if (!returnRepository.existsById(id))
+            throw new NotFoundException("İade bulunamadı. ID: " + id);
         returnRepository.deleteById(id);
     }
 }

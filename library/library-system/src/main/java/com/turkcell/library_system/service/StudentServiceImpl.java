@@ -6,8 +6,10 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import com.turkcell.library_system.dto.*;
+import com.turkcell.library_system.entity.Author;
 import com.turkcell.library_system.entity.Department;
 import com.turkcell.library_system.entity.Student;
+import com.turkcell.library_system.exception.NotFoundException;
 import com.turkcell.library_system.repository.DepartmentRepository;
 import com.turkcell.library_system.repository.StudentRepository;
 
@@ -65,7 +67,8 @@ public class StudentServiceImpl {
     }
 
     public GetByIdStudentResponse getById(UUID id) {
-        Student student = studentRepository.findById(id).orElseThrow();
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Öğrenci bulunamadı. ID: " + id));
 
         GetByIdStudentResponse response = new GetByIdStudentResponse();
         response.setId(student.getId());
@@ -80,8 +83,10 @@ public class StudentServiceImpl {
     }
 
     public UpdatedStudentResponse update(UUID id, UpdateStudentRequest request) {
-        Student student = studentRepository.findById(id).orElseThrow();
-        Department department = departmentRepository.findById(request.getDepartmentId()).orElseThrow();
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Öğrenci bulunamadı. ID: " + id));
+        Department department = departmentRepository.findById(request.getDepartmentId())
+                .orElseThrow(() -> new NotFoundException("Bölüm bulunamadı. ID: " + request.getDepartmentId()));
 
         student.setDepartment(department);
         student.setStudentNo(request.getStudentNo());
@@ -105,6 +110,8 @@ public class StudentServiceImpl {
     }
 
     public void delete(UUID id) {
+        if (!studentRepository.existsById(id))
+            throw new NotFoundException("Öğrenci bulunamadı. ID: " + id);
         studentRepository.deleteById(id);
     }
 }

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.service.StaffServiceImpl;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/staff")
 public class StaffController {
@@ -18,7 +20,7 @@ public class StaffController {
     }
 
     @PostMapping
-    public CreatedStaffResponse create(@RequestBody CreateStaffRequest request) {
+    public CreatedStaffResponse create(@RequestBody @Valid CreateStaffRequest request) {
         return staffServiceImpl.create(request);
     }
 
@@ -33,7 +35,7 @@ public class StaffController {
     }
 
     @PutMapping("/{id}")
-    public UpdatedStaffResponse update(@PathVariable UUID id, @RequestBody UpdateStaffRequest request) {
+    public UpdatedStaffResponse update(@PathVariable UUID id, @RequestBody @Valid UpdateStaffRequest request) {
         return staffServiceImpl.update(id, request);
     }
 

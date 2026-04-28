@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.entity.Author;
+import com.turkcell.library_system.exception.NotFoundException;
 import com.turkcell.library_system.repository.AuthorRepository;
 
 @Service
@@ -47,7 +48,9 @@ public class AuthorServiceImpl {
     }
 
     public GetByIdAuthorResponse getById(UUID id) {
-        Author author = authorRepository.findById(id).orElseThrow();
+        Author author = authorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Yazar bulunamadı. ID: " + id));
+
 
         GetByIdAuthorResponse response = new GetByIdAuthorResponse();
         response.setId(author.getId());
@@ -58,7 +61,8 @@ public class AuthorServiceImpl {
     }
 
     public UpdatedAuthorResponse update(UUID id, UpdateAuthorRequest request) {
-        Author author = authorRepository.findById(id).orElseThrow();
+        Author author = authorRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Yazar bulunamadı. ID: " + id));
         author.setFirstName(request.getFirstName());
         author.setLastName(request.getLastName());
         author.setBirthYear(request.getBirthYear());
@@ -73,6 +77,8 @@ public class AuthorServiceImpl {
     }
 
     public void delete(UUID id) {
+        if (!authorRepository.existsById(id))
+            throw new NotFoundException("Yazar bulunamadı. ID: " + id);
         authorRepository.deleteById(id);
     }
 }

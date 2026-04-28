@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.entity.*;
+import com.turkcell.library_system.exception.NotFoundException;
 import com.turkcell.library_system.repository.*;
 
 @Service
@@ -57,7 +58,8 @@ public class FineServiceImpl {
     }
 
     public GetByIdFineResponse getById(UUID id) {
-        Fine fine = fineRepository.findById(id).orElseThrow();
+        Fine fine = fineRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Ceza bulunamadı. ID: " + id));
 
         GetByIdFineResponse response = new GetByIdFineResponse();
         response.setId(fine.getId());
@@ -70,8 +72,10 @@ public class FineServiceImpl {
     }
 
     public UpdatedFineResponse update(UUID id, UpdateFineRequest request) {
-        Fine fine = fineRepository.findById(id).orElseThrow();
-        Borrow borrow = borrowRepository.findById(request.getBorrowId()).orElseThrow();
+        Fine fine = fineRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Ceza bulunamadı. ID: " + id));
+        Borrow borrow = borrowRepository.findById(request.getBorrowId())
+                .orElseThrow(() -> new NotFoundException("Ödünç bulunamadı. ID: " + request.getBorrowId()));
 
         fine.setBorrow(borrow);
         fine.setOverdueDate(request.getOverdueDate());
@@ -91,6 +95,9 @@ public class FineServiceImpl {
     }
 
     public void delete(UUID id) {
+        if (!fineRepository.existsById(id))
+            throw new NotFoundException("Ceza bulunamadı. ID: " + id);
+
         fineRepository.deleteById(id);
     }
 }

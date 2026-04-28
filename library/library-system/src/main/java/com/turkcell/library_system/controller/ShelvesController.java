@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.service.ShelfServiceImpl;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/shelves")
 public class ShelvesController {
@@ -18,7 +20,7 @@ public class ShelvesController {
     }
 
     @PostMapping
-    public CreatedShelfResponse create(@RequestBody CreateShelfRequest request) {
+    public CreatedShelfResponse create(@RequestBody @Valid CreateShelfRequest request) {
         return shelfServiceImpl.create(request);
     }
 
@@ -33,7 +35,7 @@ public class ShelvesController {
     }
 
     @PutMapping("/{id}")
-    public UpdatedShelfResponse update(@PathVariable UUID id, @RequestBody UpdateShelfRequest request) {
+    public UpdatedShelfResponse update(@PathVariable UUID id, @RequestBody @Valid UpdateShelfRequest request) {
         return shelfServiceImpl.update(id, request);
     }
 

@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.turkcell.library_system.dto.*;
 import com.turkcell.library_system.service.FineServiceImpl;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/fines")
 public class FinesController {
@@ -18,7 +20,7 @@ public class FinesController {
     }
 
     @PostMapping
-    public CreatedFineResponse create(@RequestBody CreateFineRequest request) {
+    public CreatedFineResponse create(@RequestBody @Valid CreateFineRequest request) {
         return fineServiceImpl.create(request);
     }
 
@@ -33,7 +35,7 @@ public class FinesController {
     }
 
     @PutMapping("/{id}")
-    public UpdatedFineResponse update(@PathVariable UUID id, @RequestBody UpdateFineRequest request) {
+    public UpdatedFineResponse update(@PathVariable UUID id, @RequestBody @Valid UpdateFineRequest request) {
         return fineServiceImpl.update(id, request);
     }
 
