@@ -1,5 +1,6 @@
 package com.turkcell.spring_starter.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,12 +15,16 @@ import com.turkcell.spring_starter.dto.UpdatedCategoryResponse;
 import com.turkcell.spring_starter.entity.Category;
 import com.turkcell.spring_starter.repository.CategoryRepository;
 
+import jakarta.persistence.EntityManager;
+
 @Service
 public class CategoryServiceImpl {
     private final CategoryRepository categoryRepository;
+    private final EntityManager entityManager;
 
-    public CategoryServiceImpl(CategoryRepository categoryRepository) {
+    public CategoryServiceImpl(CategoryRepository categoryRepository, EntityManager entityManager) {
         this.categoryRepository = categoryRepository;
+        this.entityManager = entityManager;
     }
 
     public CreatedCategoryResponse create(CreateCategoryRequest createCategoryRequest) {
@@ -74,4 +79,32 @@ public class CategoryServiceImpl {
     public void delete(UUID id) {
         categoryRepository.deleteById(id);
     }
+
+    public List<ListCategoryResponse> search(String query)
+    {
+        //Set<Category> categories = categoryRepository.findByNameLike("%" + query + "%");
+
+        // String Concatination -> KESİNLİKLE YASAK
+        //String jpql = "Select c from Category c Where c.name LIKE '%" + query + "%'";
+
+        String jpql = "Select c from Category c Where c.name like :query";
+
+        List<Category> categories = entityManager
+        .createQuery(jpql, Category.class)
+        .setParameter("query", "%" + query + "%")
+        .getResultList();
+
+        List<ListCategoryResponse> responseList = new ArrayList<>();
+
+        for (Category category : categories) {
+            ListCategoryResponse response = new ListCategoryResponse();
+            response.setId(category.getId());
+            response.setName(category.getName());
+            responseList.add(response);
+        }
+
+        return responseList;
+    }
+
+    
 }

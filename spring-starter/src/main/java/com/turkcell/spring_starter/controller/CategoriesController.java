@@ -1,6 +1,7 @@
 package com.turkcell.spring_starter.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.turkcell.spring_starter.dto.CreateCategoryRequest;
@@ -41,6 +42,11 @@ public class CategoriesController {
     @GetMapping
     public List<ListCategoryResponse> getAll() {
         return categoryServiceImpl.getAll();
+    }
+
+    @GetMapping("search")
+    public List<ListCategoryResponse> search(@RequestParam String query) {
+        return categoryServiceImpl.search(query);
     }
 
     @GetMapping("/{id}")
