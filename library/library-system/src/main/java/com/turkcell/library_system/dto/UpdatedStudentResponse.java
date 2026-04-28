@@ -1,0 +1,32 @@
+package com.turkcell.library_system.dto;
+
+import java.util.UUID;
+
+public class UpdatedStudentResponse {
+    private UUID id;
+    private UUID departmentId;
+    private String studentNo;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String phone;
+    private String status;
+
+    public UUID getId() { return id; }
+    public void setId(UUID id) { this.id = id; }
+    public UUID getDepartmentId() { return departmentId; }
+    public void setDepartmentId(UUID departmentId) { this.departmentId = departmentId; }
+    public String getStudentNo() { return studentNo; }
+    public void setStudentNo(String studentNo) { this.studentNo = studentNo; }
+    public String getFirstName() { return firstName; }
+    public void setFirstName(String firstName) { this.firstName = firstName; }
+    public String getLastName() { return lastName; }
+    public void setLastName(String lastName) { this.lastName = lastName; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+}
