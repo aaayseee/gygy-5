@@ -84,7 +84,7 @@ public class CategoryServiceImpl {
     {
         //Set<Category> categories = categoryRepository.findByNameLike("%" + query + "%");
 
-        // String Concatination -> KESİNLİKLE YASAK
+        // String Concatination (birleştimre "a" + user_input + "b") -> KESİNLİKLE YASAK
         //String jpql = "Select c from Category c Where c.name LIKE '%" + query + "%'";
 
         String jpql = "Select c from Category c Where c.name like :query";
