@@ -4,4 +4,3 @@ import java.util.UUID;
 import com.turkcell.library_cqrs.core.mediator.cqrs.Command;
 
 public record CreateCategoryCommand(String categoryName, String description) implements Command<UUID> {}
-
