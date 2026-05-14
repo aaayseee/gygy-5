@@ -1,5 +1,7 @@
 package com.turkcell.library_cqrs.application.features.student.command.login;
 
+import java.util.List;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
@@ -26,10 +28,10 @@ public class LoginStudentCommandHandler implements CommandHandler<LoginStudentCo
         Student student = studentRepository.findByEmail(command.email())
                 .orElseThrow(() -> new RuntimeException("Geçersiz kimlik bilgileri."));
 
-        if (!passwordEncoder.matches(command.password(), student.getPassword())) {
+        if (!passwordEncoder.matches(command.password(), student.getPassword()))
             throw new RuntimeException("Geçersiz kimlik bilgileri.");
-        }
 
-        return jwtService.generate(student.getId(), student.getEmail());
+        List<String> roles = List.of("STUDENT");
+        return jwtService.generate(student.getId(), student.getEmail(), roles);
     }
 }
